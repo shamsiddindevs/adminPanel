@@ -2,11 +2,16 @@ import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import Modal from "../components/Modal";
 import { CiCirclePlus } from "react-icons/ci";
+import EditModal from "../components/EditModal";
 
 const Category = () => {
   let token = JSON.parse(localStorage.getItem("token"));
   const [categ, setCateg] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const[id, setId] = useState(null)
+
+  //read
   const f = () =>
     fetch(`https://realauto.limsa.uz/api/${"categories"}`)
       .then((res) => res.json())
@@ -17,6 +22,7 @@ const Category = () => {
   }, []);
   console.log(categ);
 
+  //delete
   const onDelete = (id) => {
     fetch(`https://realauto.limsa.uz/api/${"categories"}/${id}`, {
       method: "DELETE",
@@ -29,13 +35,64 @@ const Category = () => {
       .then((data) => {
         if (data.success) {
           toast.success(data.message);
+          
           f();
+        } else {
+          toast.error(data.message);
+          
+        }
+      })
+      .catch((error) => toast.error(error.message));
+      
+  };
+
+  //create
+  const onCreate = (data) => {
+
+    fetch(`https://realauto.limsa.uz/api/${"categories"}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        
+      },
+      body: data,
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        toast.success(data.message);
+        f();
+        setOpenModal(false);
+      } else {
+        toast.error(data.message);
+        
+      }
+    })
+    .catch((error) => toast.error(error.message));
+  }
+
+  //update
+  const onEdit = (data) => {
+    fetch(`https://realauto.limsa.uz/api/${"categories"}/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,  
+      },
+      body: data ,
+    })
+     .then((res) => res.json())
+     .then((data) => {
+        if (data.success) {
+          toast.success(data.message);
+          f();
+          setEditModal(false)
         } else {
           toast.error(data.message);
         }
       })
-      .catch((error) => toast.error(error.message));
-  };
+     .catch((error) => toast.error(error.message));
+  }
+    
 
   return (
     <div className="flex-1 flex flex-col   h-full overflow-auto p-5">
@@ -105,7 +162,7 @@ const Category = () => {
                     <a
                       href="#"
                       className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900 "
-                      onClick={() => setOpenModal(true)}>
+                      onClick={() => {setEditModal(true); setId(v?.id)}}>
                       Edit
                     </a>
                     <a
@@ -121,7 +178,8 @@ const Category = () => {
           </tbody>
         </table>
       </div>
-      {openModal && <Modal setOpenModal={setOpenModal} />}
+      {openModal && <Modal setOpenModal={setOpenModal} onCreate ={onCreate} />}
+      {editModal && <EditModal setEditModal={setEditModal} onEdit ={onEdit} categ= {categ} id={id} />}
     </div>
   );
 };
