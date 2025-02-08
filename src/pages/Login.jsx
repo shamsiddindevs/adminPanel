@@ -1,6 +1,7 @@
 import {useState} from "react";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
+import {CiLock, CiUser} from "react-icons/ci";
 
 const Login = () => {
   const [formData, setFormData] = useState({phone_number: "", password: ""});
@@ -22,8 +23,11 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if(data.success){
-          localStorage.setItem("token", JSON.stringify(data?.data?.tokens?.accessToken?.token));
+        if (data.success) {
+          localStorage.setItem(
+            "token",
+            JSON.stringify(data?.data?.tokens?.accessToken?.token)
+          );
           toast.success(data.message);
           navigate("/home");
           window.location.reload();
@@ -37,40 +41,55 @@ const Login = () => {
   }
 
   return (
-    <div className="bg-gray-200 rounded-2xl px-5 py-20 max-w-md text-center my-10 mx-auto">
-      <h1 className="mb-10 text-3xl uppercase">login Page</h1>
-      <form
-        action=""
-        className="flex flex-col items-center gap-2.5 "
-        onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
-        <input
-          value={formData.phone_number}
-          name="phone_number"
-          onChange={changeData}
-          className="border py-1 px-2 rounded-md"
-          type="text"
-          id="username"
-          required
-        />
-
-        <label htmlFor="password">Password:</label>
-        <input
-          value={formData.password}
-          name="password"
-          onChange={changeData}
-          className="border py-1 px-2 mb-5 rounded-md"
-          type="text"
-          id="password"
-          required
-        />
-
-        <button
-          type="submit"
-          className="px-10 py-2 bg-gray-600 rounded-md text-white ">
-          Submit
-        </button>
-      </form>
+    <div className="bg-[#F4F5FA] flex justify-center items-center h-screen px-2">
+      <div className="bg-white rounded-xl px-8 py-12 w-full max-w-[443px] text-center my-10 mx-auto">
+        <h1 className="mb-2 text-xl font-medium ">Welcome back!</h1>
+        <h2 className="text-sm text-[#8B8D97] mb-16">
+          Login to Admin Dashboard
+        </h2>
+        <form
+          action=""
+          className="flex flex-col items-center gap-2.5 w-full max-w-[375px] "
+          onSubmit={handleSubmit}>
+          <label
+            htmlFor="username"
+            className="flex items-center rounded-lg gap-4 w-full px-4 py-2 bg-[#F1F3F9] mb-[30px]">
+            {" "}
+            <CiUser className="text-2xl text-black/40" />
+            <input
+              value={formData.phone_number}
+              name="phone_number"
+              onChange={changeData}
+              className="outline-0 placeholder:text-[#ABAFB1] h-9"
+              type="text"
+              id="username"
+              placeholder="Username"
+              required
+            />
+          </label>
+          <label
+            htmlFor="username"
+            className="flex items-center rounded-lg gap-4 w-full px-4 py-2 bg-[#F1F3F9] ">
+            {" "}
+            <CiLock className="text-2xl text-black/40" />
+            <input
+              value={formData.password}
+              name="password"
+              onChange={changeData}
+              className="outline-0 placeholder:text-[#ABAFB1] h-9 "
+              type="text"
+              id="password"
+              placeholder="Password"
+              required
+            />
+          </label>
+          <button
+            type="submit"
+            className="px-4 py-4 mt-10 rounded-xl text-white w-full text-xl bg-[#5570F1] max-w-[148px] mx-auto ">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

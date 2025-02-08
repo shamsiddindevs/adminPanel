@@ -12,12 +12,11 @@ const Modal = ({setOpenModal, onCreate}) => {
   const sendFormData = (e) => {
     e.preventDefault();
     console.log(formData);
-
     onCreate(formData);
   };
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black/75 z-50 flex items-center justify-center">
-      <div className="bg-white p-5 rounded shadow-md w-full max-w-md">
+    <div className="fixed inset-0 bg-[#A3A3A3]/ backdrop-blur-sm  z-50 flex items-center justify-center">
+      <div className="bg-white p-5 rounded shadow-2xl w-full max-w-md">
         {/* Your modal content goes here */}
         <form
           action=""

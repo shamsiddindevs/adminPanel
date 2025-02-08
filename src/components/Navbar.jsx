@@ -39,7 +39,7 @@ const Navbar = ({toggle, setToggle}) => {
   return (
     <div className="px-2.5 py-5 bg-white rounded-md flex items-center justify-between">
       <span
-        className="text-xl w-8 rounded-[12px] text-white   bg-[#5570F1] h-8  flex items-center justify-center cursor-pointer "
+        className="text-xl w-8 rounded-[12px] text-[#5570F1]   bg-[#5570F1]/15 h-8  flex items-center justify-center cursor-pointer "
         onClick={() => setToggle(!toggle)}>
         <CiMenuKebab
           className={
