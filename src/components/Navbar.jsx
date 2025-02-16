@@ -54,7 +54,7 @@ const Navbar = ({toggle, setToggle}) => {
         className="relative z-10  flex items-center  group cursor-pointer "
         onClick={() => setUser(!user)}>
         <img
-          src="../../public/assets/user.png"
+          src="./assets/user.png"
           className="w-8 h-8 rounded-[8px] object-cover group-hover:opacity-100 opacity-80"
           alt="user icon"
         />
