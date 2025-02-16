@@ -15,7 +15,7 @@ let category = [
 
 
   return (
-    <div className={`w-[88px] ${toggle?"md:w-[88px] md:px-4":" md:w-[296px] md:px-8 "} px-4 transition-all bg-white  rounded-md h-full py-5 overflow-hidden flex flex-col justify-between`}>
+    <div className={`hidden lg:flex w-[88px] ${toggle?"md:w-[88px] md:px-4":" md:w-[296px] md:px-8 "} px-4 transition-all bg-white  rounded-md h-full py-5 overflow-hidden  flex-col justify-between`}>
       {!toggle?<Link to={"/home"} className="text-xl text-center font-extrabold mb-10 px-2 text-[#202224]"> <span className="text-[#4880FF]">Admin</span>Panel</Link>:<Link to={"/home"} className="text-xl text-center font-extrabold mb-10 px-2 text-[#202224]"> <span className="text-[#4880FF]">A</span>P</Link>}
       <ul className="list-none">
         {category.map(item => (

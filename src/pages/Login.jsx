@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState} from "react";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {CiLock, CiUser} from "react-icons/ci";
@@ -6,6 +6,7 @@ import {CiLock, CiUser} from "react-icons/ci";
 const Login = () => {
   const [formData, setFormData] = useState({phone_number: "", password: ""});
   const navigate = useNavigate();
+  const [loading,setLoading] = useState(false)
 
   function changeData(e) {
     setFormData({...formData, [e.target.name]: e.target.value});
@@ -13,6 +14,7 @@ const Login = () => {
   }
 
   function handleSubmit(e) {
+     setLoading(true)
     e.preventDefault();
     fetch("https://realauto.limsa.uz/api/auth/signin", {
       method: "POST",
@@ -34,7 +36,9 @@ const Login = () => {
         } else {
           toast.error(data.message);
         }
-      });
+        setLoading(false)
+      })
+      ;
 
     console.log("Form submitted");
     setFormData({phone_number: "", password: ""});
@@ -83,11 +87,15 @@ const Login = () => {
               required
             />
           </label>
-          <button
+          {loading?<div
             type="submit"
-            className="px-4 py-4 mt-10 rounded-xl text-white w-full text-xl bg-[#5570F1] max-w-[148px] mx-auto ">
+            className="px-4 py-4 mt-10 rounded-xl text-white text-xl bg-[#5570F1] w-full max-w-[180px] cursor-pointer">
+            Checking...
+          </div>:<button
+            type="submit"
+            className="px-4 py-4 mt-10 rounded-xl text-white text-xl bg-[#5570F1] w-full max-w-[180px] cursor-pointer">
             Login
-          </button>
+          </button>}
         </form>
       </div>
     </div>

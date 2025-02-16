@@ -1,12 +1,18 @@
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import Modal from "../components/Modal";
-import {CiCirclePlus} from "react-icons/ci";
+import { CiCirclePlus } from "react-icons/ci";
+import EditModal from "../components/EditModal";
 
 const Cars = () => {
   let token = JSON.parse(localStorage.getItem("token"));
   const [categ, setCateg] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const[id, setId] = useState(null);
+  const[loading,setLoading] = useState(false)
+
+  //read
   const f = () =>
     fetch(`https://realauto.limsa.uz/api/${"cars"}`)
       .then((res) => res.json())
@@ -17,6 +23,7 @@ const Cars = () => {
   }, []);
   console.log(categ);
 
+  //delete
   const onDelete = (id) => {
     fetch(`https://realauto.limsa.uz/api/${"cars"}/${id}`, {
       method: "DELETE",
@@ -29,16 +36,74 @@ const Cars = () => {
       .then((data) => {
         if (data.success) {
           toast.success(data.message);
+          
           f();
+        } else {
+          toast.error(data.message);
+          
+        }
+      })
+      .catch((error) => toast.error(error.message));
+      
+  };
+
+  //create
+  const onCreate = (data) => {
+    setLoading(true)
+
+    fetch(`https://realauto.limsa.uz/api/${"cars"}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        
+      },
+      body: data,
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        toast.success(data.message);
+        f();
+        setOpenModal(false);
+      } else {
+        toast.error(data.message);
+        
+      }
+    })
+    .catch((error) => toast.error(error.message))
+    .finally(()=>{setLoading(false)});
+  }
+
+  //update
+  const onEdit = (data) => {
+    setLoading(true)
+    fetch(`https://realauto.limsa.uz/api/${"cars"}/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,  
+      },
+      body: data ,
+    })
+     .then((res) => res.json())
+     .then((data) => {
+        if (data.success) {
+          toast.success(data.message);
+          f();
+          setEditModal(false);
+         
         } else {
           toast.error(data.message);
         }
       })
-      .catch((error) => toast.error(error.message));
-  };
+     .catch((error) => toast.error(error.message))
+     .finally(()=>{ setLoading(false);
+      
+     });
+  }
+    
 
   return (
-    <div className="flex-1 flex flex-col  h-full overflow-auto p-5">
+    <div className="flex-1 flex flex-col   h-full overflow-auto p-5">
       {/* Your dashboard content goes here */}
       <div className="flex justify-between items-center mb-5">
         <h2 className=" text-lg font-medium text-[#45464E]">Cars</h2>
@@ -48,10 +113,10 @@ const Cars = () => {
           <span className="text-[24px]">
             <CiCirclePlus />
           </span>{" "}
-          <span>Add Car</span>
+          <span>Add Cars</span>
         </button>
       </div>
-      <div className="relative flex flex-col bg-white rounded-md p-5 w-full h-full  text-gray-700  shadow-md  ">
+      <div className="relative flex flex-col w-full flex-1   text-gray-700  shadow-md bg-white rounded-md p-5">
         <table className="w-full text-left table-auto min-w-max">
           <thead>
             <tr>
@@ -105,7 +170,7 @@ const Cars = () => {
                     <a
                       href="#"
                       className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900 "
-                      onClick={() => setOpenModal(true)}>
+                      onClick={() => {setEditModal(true); setId(v?.id)}}>
                       Edit
                     </a>
                     <a
@@ -121,7 +186,8 @@ const Cars = () => {
           </tbody>
         </table>
       </div>
-      {openModal && <Modal setOpenModal={setOpenModal} />}
+      {openModal && <Modal setOpenModal={setOpenModal} title = {"Cars"} loading={loading} onCreate ={onCreate} />}
+      {editModal && <EditModal setEditModal={setEditModal} title = {"Cars"} loading={loading} onEdit ={onEdit} categ= {categ} id={id} />}
     </div>
   );
 };

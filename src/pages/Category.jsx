@@ -9,7 +9,8 @@ const Category = () => {
   const [categ, setCateg] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const[id, setId] = useState(null)
+  const[id, setId] = useState(null);
+  const[loading,setLoading] = useState(false)
 
   //read
   const f = () =>
@@ -48,6 +49,7 @@ const Category = () => {
 
   //create
   const onCreate = (data) => {
+    setLoading(true)
 
     fetch(`https://realauto.limsa.uz/api/${"categories"}`, {
       method: "POST",
@@ -68,11 +70,13 @@ const Category = () => {
         
       }
     })
-    .catch((error) => toast.error(error.message));
+    .catch((error) => toast.error(error.message))
+    .finally(()=>{setLoading(false)});
   }
 
   //update
   const onEdit = (data) => {
+    setLoading(true)
     fetch(`https://realauto.limsa.uz/api/${"categories"}/${id}`, {
       method: "PUT",
       headers: {
@@ -85,12 +89,16 @@ const Category = () => {
         if (data.success) {
           toast.success(data.message);
           f();
-          setEditModal(false)
+          setEditModal(false);
+         
         } else {
           toast.error(data.message);
         }
       })
-     .catch((error) => toast.error(error.message));
+     .catch((error) => toast.error(error.message))
+     .finally(()=>{ setLoading(false);
+      
+     });
   }
     
 
@@ -178,8 +186,8 @@ const Category = () => {
           </tbody>
         </table>
       </div>
-      {openModal && <Modal setOpenModal={setOpenModal} onCreate ={onCreate} />}
-      {editModal && <EditModal setEditModal={setEditModal} onEdit ={onEdit} categ= {categ} id={id} />}
+      {openModal && <Modal setOpenModal={setOpenModal} title = {"Category"} loading={loading} onCreate ={onCreate} />}
+      {editModal && <EditModal setEditModal={setEditModal} title = {"Category"} loading={loading} onEdit ={onEdit} categ= {categ} id={id} />}
     </div>
   );
 };

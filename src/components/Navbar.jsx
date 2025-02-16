@@ -7,25 +7,26 @@ import {
   CiSettings,
   CiUser,
 } from "react-icons/ci";
+import {Link} from "react-router-dom";
 
 const Navbar = ({toggle, setToggle}) => {
   let userList = [
     {
       id: 1,
       title: "Profile",
-      link: "/profile",
+      link: "/home",
       icon: <CiUser className="text-[#4E96FF]" />,
     },
     {
       id: 2,
       title: "Edit",
-      link: "/edit",
+      link: "/home",
       icon: <CiEdit className="text-[#4AD991]" />,
     },
     {
       id: 3,
       title: "Settings",
-      link: "/settings",
+      link: "/home",
       icon: <CiSettings className="text-[#9E8FFF]" />,
     },
     {
@@ -74,20 +75,28 @@ const Navbar = ({toggle, setToggle}) => {
             !user ? "opacity-0 invisible" : "opacity-100 visible"
           }`}
           style={{boxShadow: "0px 9px 40px 0px rgba(0,0,0,0.2)"}}>
-          {userList.map((item) => (
-            <div
-              key={item.id}
-              className="  py-3 px-5 cursor-pointer hover:bg-[#f5f5f5] flex gap-4 border-b border-[#D8D8D8]"
-              onClick={() => {
-                if (item.id === 4) {
+          {userList.map((item) =>
+            item.id !== 4 ? (
+              <Link
+                to={item.link}
+                key={item.id}
+                className="  py-3 px-5 cursor-pointer hover:bg-[#f5f5f5] flex gap-4 border-b border-[#D8D8D8]">
+                <span className="text-xl">{item.icon}</span>
+                <span className="text-sm font-semibold">{item.title}</span>
+              </Link>
+            ) : (
+              <div
+                key={item.id}
+                className="  py-3 px-5 cursor-pointer hover:bg-[#f5f5f5] flex gap-4 border-b border-[#D8D8D8]"
+                onClick={() => {
                   localStorage.removeItem("token");
                   window.location.href = "/";
-                } else {window.location.href = item.link};
-              }}>
-              <span className="text-xl">{item.icon}</span>
-              <span className="text-sm font-semibold">{item.title}</span>
-            </div>
-          ))}
+                }}>
+                <span className="text-xl">{item.icon}</span>
+                <span className="text-sm font-semibold">{item.title}</span>
+              </div>
+            )
+          )}
         </div>
       </div>
     </div>

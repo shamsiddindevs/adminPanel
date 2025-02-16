@@ -9,7 +9,7 @@ import MyBarChart from "../components/ChartBar";
 const Home = () => {
   return (
     <div className="flex-1  h-full  overflow-auto px-5 py-4 ">
-      <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:h-[850px] grid-rows-5">
+      <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:h-[850px] lg:grid-rows-5">
         <div className="bg-white rounded-xl px-4 py-3 flex flex-col justify-between ">
           <div className="flex justify-between items-center ">
             <span className="w-9 h-9 rounded-lg bg-[#5570F1]/[12%] flex items-center justify-center">
@@ -114,7 +114,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl px-4 py-3 row-span-2 flex flex-col gap-3">
+        <div className="bg-white rounded-xl px-4 py-3 lg:row-span-2 flex flex-col gap-3">
           <div className="flex justify-between items-center">
             <h2 className="font-medium">Marketting</h2>
             <div className="flex items-center gap-2 cursor-pointer group  relative text-black/10 hover:text-black/30">
@@ -219,7 +219,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl px-4 py-3 col-span-2 row-span-2 flex flex-col gap-3">
+        <div className="bg-white rounded-xl px-4 py-3 lg:col-span-2 lg:row-span-2 flex flex-col gap-3">
           <div className="flex justify-between items-center ">
             <div className="flex gap-5 items-center">
               <h2 className="">Summary</h2>

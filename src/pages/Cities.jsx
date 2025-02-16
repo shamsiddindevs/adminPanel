@@ -1,12 +1,18 @@
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import Modal from "../components/Modal";
-import {CiCirclePlus} from "react-icons/ci";
+import { CiCirclePlus } from "react-icons/ci";
+import EditModal from "../components/EditModal";
 
 const Cities = () => {
   let token = JSON.parse(localStorage.getItem("token"));
   const [categ, setCateg] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const[id, setId] = useState(null);
+  const[loading,setLoading] = useState(false)
+
+  //read
   const f = () =>
     fetch(`https://realauto.limsa.uz/api/${"cities"}`)
       .then((res) => res.json())
@@ -17,6 +23,7 @@ const Cities = () => {
   }, []);
   console.log(categ);
 
+  //delete
   const onDelete = (id) => {
     fetch(`https://realauto.limsa.uz/api/${"cities"}/${id}`, {
       method: "DELETE",
@@ -29,16 +36,74 @@ const Cities = () => {
       .then((data) => {
         if (data.success) {
           toast.success(data.message);
+          
           f();
+        } else {
+          toast.error(data.message);
+          
+        }
+      })
+      .catch((error) => toast.error(error.message));
+      
+  };
+
+  //create
+  const onCreate = (data) => {
+    setLoading(true)
+
+    fetch(`https://realauto.limsa.uz/api/${"cities"}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        
+      },
+      body: data,
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.success) {
+        toast.success(data.message);
+        f();
+        setOpenModal(false);
+      } else {
+        toast.error(data.message);
+        
+      }
+    })
+    .catch((error) => toast.error(error.message))
+    .finally(()=>{setLoading(false)});
+  }
+
+  //update
+  const onEdit = (data) => {
+    setLoading(true)
+    fetch(`https://realauto.limsa.uz/api/${"cities"}/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,  
+      },
+      body: data ,
+    })
+     .then((res) => res.json())
+     .then((data) => {
+        if (data.success) {
+          toast.success(data.message);
+          f();
+          setEditModal(false);
+         
         } else {
           toast.error(data.message);
         }
       })
-      .catch((error) => toast.error(error.message));
-  };
+     .catch((error) => toast.error(error.message))
+     .finally(()=>{ setLoading(false);
+      
+     });
+  }
+    
 
   return (
-    <div className="flex-1 flex flex-col  h-full overflow-auto p-5">
+    <div className="flex-1 flex flex-col   h-full overflow-auto p-5">
       {/* Your dashboard content goes here */}
       <div className="flex justify-between items-center mb-5">
         <h2 className=" text-lg font-medium text-[#45464E]">Cities</h2>
@@ -51,7 +116,7 @@ const Cities = () => {
           <span>Add Cities</span>
         </button>
       </div>
-      <div className="relative flex flex-col bg-white rounded-md p-5 w-full h-full  text-gray-700  shadow-md  ">
+      <div className="relative flex flex-col w-full flex-1   text-gray-700  shadow-md bg-white rounded-md p-5">
         <table className="w-full text-left table-auto min-w-max">
           <thead>
             <tr>
@@ -83,21 +148,21 @@ const Cities = () => {
               <tr key={v.id}>
                 <td className="p-4 border-b border-blue-gray-50">
                   <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                    {v?.name}
+                    {v.name}
                   </p>
                 </td>
                 <td className="p-4 border-b border-blue-gray-50">
                   <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                     <img
-                      src={`https://realauto.limsa.uz/api/uploads/images/${v?.image_src}`}
+                      src={`https://realauto.limsa.uz/api/uploads/images/${v.image_src}`}
                       className="w-10 h-10 object-cover"
-                      alt={v.name_en}
+                      alt={v.name}
                     />
                   </p>
                 </td>
                 <td className="p-4 border-b border-blue-gray-50">
                   <p className="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                    {v?.created_at?.slice(0, 10)}
+                    {v?.created_at.slice(0, 10)}
                   </p>
                 </td>
                 <td className="p-4 border-b border-blue-gray-50 ">
@@ -105,13 +170,13 @@ const Cities = () => {
                     <a
                       href="#"
                       className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900 "
-                      onClick={() => setOpenModal(true)}>
+                      onClick={() => {setEditModal(true); setId(v?.id)}}>
                       Edit
                     </a>
                     <a
                       href="#"
                       className="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900"
-                      onClick={() => onDelete(v?.id)}>
+                      onClick={() => onDelete(v.id)}>
                       Delete
                     </a>
                   </p>
@@ -121,7 +186,8 @@ const Cities = () => {
           </tbody>
         </table>
       </div>
-      {openModal && <Modal setOpenModal={setOpenModal} />}
+      {openModal && <Modal setOpenModal={setOpenModal} title = {"Cities"} loading={loading} onCreate ={onCreate} />}
+      {editModal && <EditModal setEditModal={setEditModal} title = {"Cities"} loading={loading} onEdit ={onEdit} categ= {categ} id={id} />}
     </div>
   );
 };
